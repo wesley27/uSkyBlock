@@ -33,7 +33,7 @@
 	      <resource>
 	        <targetPath>.</targetPath>
 	        <filtering>true</filtering>
-	        <directory>${basedir}/resources</directory>
+	        <directory>src/main/resources</directory>
 	        <includes>
 	          <include>plugin.yml</include>
 	          <include>config.yml</include>
@@ -43,7 +43,7 @@
 	      </resource>
 	    </resources>
 	
-	    <sourceDirectory>src</sourceDirectory>
+	    <sourceDirectory>src/main/java</sourceDirectory>
 	    <plugins>
 	      <plugin>
 	        <groupId>org.apache.maven.plugins</groupId>
