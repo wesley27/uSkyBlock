@@ -1,18 +1,14 @@
 package us.talabrek.ultimateskyblock;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class UUIDPlayerInfo implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -52,7 +48,7 @@ public class UUIDPlayerInfo implements Serializable {
 
     // constructor using OldPlayerInfo, for conversion
     @SuppressWarnings("deprecation")
-	public UUIDPlayerInfo(final PlayerInfo oldPlayerInfo) {
+    public UUIDPlayerInfo(final PlayerInfo oldPlayerInfo) {
         playerUUID = Bukkit.getOfflinePlayer(oldPlayerInfo.playerName).getUniqueId();
 
         members = new ArrayList<UUID>();

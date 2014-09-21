@@ -12,207 +12,202 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.player.PlayerBedEnterEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.event.player.PlayerBucketFillEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.potion.Potion;
 
 public class ProtectionEvents implements Listener {
-	private Player breaker = null;
+    private Player breaker = null;
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onHorseLead(final PlayerInteractEntityEvent event) {
-		if (event.getRightClicked().getType() == EntityType.HORSE || event.getRightClicked().getType() == EntityType.ITEM_FRAME) {
-			final Player player = event.getPlayer();
-			if (player.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-				if (!uSkyBlock.getInstance().locationIsOnIsland(player.getUniqueId(), event.getRightClicked().getLocation()) && !uSkyBlock.getInstance().playerIsInSpawn(event.getPlayer()) && !VaultHandler.checkPerk(player, "usb.mod.bypassprotection", player.getWorld()) && !player.isOp()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onHorseLead(final PlayerInteractEntityEvent event) {
+        if (event.getRightClicked().getType() == EntityType.HORSE || event.getRightClicked().getType() == EntityType.ITEM_FRAME) {
+            final Player player = event.getPlayer();
+            if (player.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+                if (!uSkyBlock.getInstance().locationIsOnIsland(player.getUniqueId(), event.getRightClicked().getLocation()) && !uSkyBlock.getInstance().playerIsInSpawn(event.getPlayer()) && !VaultHandler.checkPerk(player, "usb.mod.bypassprotection", player.getWorld()) && !player.isOp()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerAttack(final EntityDamageByEntityEvent event) {
-		if (!event.getEntity().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
-			return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerAttack(final EntityDamageByEntityEvent event) {
+        if (!event.getEntity().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
+            return;
 
-		if (!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Projectile))
-			return;
-		
-		if (event.getEntity() instanceof Player)
-			return;
+        if (!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Projectile))
+            return;
 
-		Player damager = null;
+        if (event.getEntity() instanceof Player)
+            return;
 
-		if (event.getDamager() instanceof Projectile) {
+        Player damager = null;
 
-			Projectile projectile = (Projectile) event.getDamager();
+        if (event.getDamager() instanceof Projectile) {
 
-			if (projectile.getShooter() instanceof Player)
-				damager = (Player) projectile.getShooter();
-		} else if (event.getDamager() instanceof Player)
-			damager = (Player) event.getDamager();
+            Projectile projectile = (Projectile) event.getDamager();
 
-		if (damager == null)
-			return;
-		
-		if (damager.hasPermission("usb.mod.bypassprotection"))
-			return;
+            if (projectile.getShooter() instanceof Player)
+                damager = (Player) projectile.getShooter();
+        } else if (event.getDamager() instanceof Player)
+            damager = (Player) event.getDamager();
 
-		if (!uSkyBlock.getInstance().playerIsOnIsland(damager))
-			event.setCancelled(true);
-	}
+        if (damager == null)
+            return;
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerBedEnter(final PlayerBedEnterEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.setCancelled(true);
-			}
-		}
-	}
+        if (damager.hasPermission("usb.mod.bypassprotection"))
+            return;
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerBlockBreak(final BlockBreakEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlock().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.setCancelled(true);
-			}
-		}
-	}
+        if (!uSkyBlock.getInstance().playerIsOnIsland(damager))
+            event.setCancelled(true);
+    }
 
-	@EventHandler(priority = EventPriority.HIGH)
-	public void onPlayerBlockPlace(final BlockPlaceEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlock().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.setCancelled(true);
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerBedEnter(final PlayerBedEnterEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerBreakHanging(final HangingBreakByEntityEvent event) {
-		if (event.getRemover() instanceof Player) {
-			breaker = (Player) event.getRemover();
-			if (breaker.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-				if (!uSkyBlock.getInstance().locationIsOnIsland(breaker.getUniqueId(), event.getEntity().getLocation()) && !VaultHandler.checkPerk(breaker, "usb.mod.bypassprotection", breaker.getWorld()) && !breaker.isOp()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerBlockBreak(final BlockBreakEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlock().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerBucketEmpty(final PlayerBucketEmptyEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlockClicked().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
-				event.setCancelled(true);
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerBlockPlace(final BlockPlaceEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlock().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerBucketFill(final PlayerBucketFillEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlockClicked().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
-				event.setCancelled(true);
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerBreakHanging(final HangingBreakByEntityEvent event) {
+        if (event.getRemover() instanceof Player) {
+            breaker = (Player) event.getRemover();
+            if (breaker.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+                if (!uSkyBlock.getInstance().locationIsOnIsland(breaker.getUniqueId(), event.getEntity().getLocation()) && !VaultHandler.checkPerk(breaker, "usb.mod.bypassprotection", breaker.getWorld()) && !breaker.isOp()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !uSkyBlock.getInstance().playerIsInSpawn(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				if (event.getMaterial() == Material.ENDER_PEARL) {
-					event.setCancelled(true);
-					return;
-				}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerBucketEmpty(final PlayerBucketEmptyEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlockClicked().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
+                event.setCancelled(true);
+            }
+        }
+    }
 
-				if (event.getClickedBlock() != null && !event.getClickedBlock().getType().isEdible()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerBucketFill(final PlayerBucketFillEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getBlockClicked().getLocation()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
+                event.setCancelled(true);
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerShearEntity(final PlayerShearEntityEvent event) {
-		if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-			if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
-				event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
-				event.setCancelled(true);
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerInteract(final PlayerInteractEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !uSkyBlock.getInstance().playerIsInSpawn(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                if (event.getMaterial() == Material.ENDER_PEARL) {
+                    event.setCancelled(true);
+                    return;
+                }
 
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerVehicleDamage(final VehicleDamageEvent event) {
-		if (event.getAttacker() instanceof Player) {
-			breaker = (Player) event.getAttacker();
-			if (breaker.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
-				if (!uSkyBlock.getInstance().locationIsOnIsland(breaker.getUniqueId(), event.getVehicle().getLocation()) && !VaultHandler.checkPerk(breaker, "usb.mod.bypassprotection", breaker.getWorld()) && !breaker.isOp()) {
-					event.setCancelled(true);
-				}
-			}
-		}
-	}
+                if (event.getClickedBlock() != null && !event.getClickedBlock().getType().isEdible()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-	@EventHandler
-	public void onPlayerEnterVehicle(VehicleEnterEvent event) {
-		if (!(event.getEntered() instanceof Player))
-			return;
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerShearEntity(final PlayerShearEntityEvent event) {
+        if (event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+            if (!uSkyBlock.getInstance().playerIsOnIsland(event.getPlayer()) && !VaultHandler.checkPerk(event.getPlayer(), "usb.mod.bypassprotection", event.getPlayer().getWorld()) && !event.getPlayer().isOp()) {
+                event.getPlayer().sendMessage(ChatColor.RED + "You can only do that on your island!");
+                event.setCancelled(true);
+            }
+        }
+    }
 
-		Player player = (Player) event.getEntered();
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerVehicleDamage(final VehicleDamageEvent event) {
+        if (event.getAttacker() instanceof Player) {
+            breaker = (Player) event.getAttacker();
+            if (breaker.getWorld().getName().equalsIgnoreCase(Settings.general_worldName)) {
+                if (!uSkyBlock.getInstance().locationIsOnIsland(breaker.getUniqueId(), event.getVehicle().getLocation()) && !VaultHandler.checkPerk(breaker, "usb.mod.bypassprotection", breaker.getWorld()) && !breaker.isOp()) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+    }
 
-		if (player.hasPermission("usb.mod.bypassprotection"))
-			return;
+    @EventHandler
+    public void onPlayerEnterVehicle(VehicleEnterEvent event) {
+        if (!(event.getEntered() instanceof Player))
+            return;
 
-		if (!event.getEntered().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
-			return;
+        Player player = (Player) event.getEntered();
 
-		if (!uSkyBlock.getInstance().locationIsOnIsland(player.getUniqueId(), event.getVehicle().getLocation())) {
-			player.sendMessage(ChatColor.RED + "You can only do that on your island!");
-			event.setCancelled(true);
-		}
-	}
+        if (player.hasPermission("usb.mod.bypassprotection"))
+            return;
 
-	@EventHandler
-	public void onPotionThrow(PlayerInteractEvent event) {
-		if (event.getPlayer().hasPermission("usb.mod.bypassprotection"))
-			return;
+        if (!event.getEntered().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
+            return;
 
-		if (!event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
-			return;
+        if (!uSkyBlock.getInstance().locationIsOnIsland(player.getUniqueId(), event.getVehicle().getLocation())) {
+            player.sendMessage(ChatColor.RED + "You can only do that on your island!");
+            event.setCancelled(true);
+        }
+    }
 
-		if (uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getPlayer().getLocation()))
-			return;
+    @EventHandler
+    public void onPotionThrow(PlayerInteractEvent event) {
+        if (event.getPlayer().hasPermission("usb.mod.bypassprotection"))
+            return;
 
-		if (event.getMaterial() == Material.POTION && event.getItem().getDurability() != 0) {
+        if (!event.getPlayer().getWorld().getName().equalsIgnoreCase(Settings.general_worldName))
+            return;
 
-			Potion potion = null;
+        if (uSkyBlock.getInstance().locationIsOnIsland(event.getPlayer().getUniqueId(), event.getPlayer().getLocation()))
+            return;
 
-			try {
-				potion = Potion.fromItemStack(event.getItem());
-			} catch (IllegalArgumentException e) {
-				return;
-			}
+        if (event.getMaterial() == Material.POTION && event.getItem().getDurability() != 0) {
 
-			if (potion == null)
-				return;
+            Potion potion = null;
 
-			if (potion.isSplash()) {
-				event.setCancelled(true);
-				event.getPlayer().sendMessage(ChatColor.RED + "Splash potions are disabled when not on your island!");
-			}
-		}
-	}
+            try {
+                potion = Potion.fromItemStack(event.getItem());
+            } catch (IllegalArgumentException e) {
+                return;
+            }
+
+            if (potion == null)
+                return;
+
+            if (potion.isSplash()) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.RED + "Splash potions are disabled when not on your island!");
+            }
+        }
+    }
 }
